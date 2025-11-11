@@ -1,7 +1,45 @@
 // Plantilla para cada canción:
 "use strict";
 
+let renderSongs = async () => {
+    try {
+        
+        const response = await fetch("https://raw.githubusercontent.com/DATA-DAWM/Datos/refs/heads/main/Youtube/only_songs.json");
+        const data = await response.json(); 
 
+        let container = document.getElementById("songs-grid");
+        container.innerHTML = ""; 
+
+        let canciones = data.slice(0, 12);
+        let formatter = new Intl.NumberFormat('en-US'); 
+        canciones.forEach(cancion => {
+            
+            let mostrarCancion = `
+           <article class="song-card">
+    <div class="cover">
+        <img src="${cancion.thumbnail}"
+            alt="Portada: ${cancion.title}">
+        <span class="badge">${cancion.duration_string}</span>
+    </div>
+    <div class="content">
+        <h2 class="title">${cancion.title}</h2>
+        <div class="meta">${formatter.format(cancion.channel_follower_count)}</div>
+        <div class="footer">
+            <span class="channel">Canal: <a href="${cancion.channel_url}"
+                    target="_blank" rel="noopener noreferrer">${cancion.channel}</a></span>
+        </div>
+    </div>
+</article>`
+            container.innerHTML += mostrarCancion; 
+        })
+
+        
+
+    } catch (error) {
+        alert(`No se pudo cargar las categorias ${error.message}`);
+
+    }
+}
 
 let card_song = `<article class="song-card">
     <div class="cover">
@@ -29,42 +67,7 @@ let formatter = new Intl.NumberFormat('en-US');
 // let views_withformat= formatter.format(views_witoutformat); 
 // Valor de views_withformat: "2,536,628"
 
-let renderSongs = async () => {
-    try {
-        const response = await fetch("https://raw.githubusercontent.com/DATA-DAWM/Datos/refs/heads/main/Youtube/only_songs.json");
 
-        let container = document.getElementById("songs-grid");
-
-        let canciones = response.slice(0, 11);
-        let formatter = new Intl.NumberFormat('en-US'); 
-        canciones.forEach(cancion => {
-            
-            let mostrarCancion = `
-           <article class="song-card">
-    <div class="cover">
-        <img src="${cancion.thumbnail}"
-            alt="Portada: ${cancion.title}">
-        <span class="badge">${cancion.duration_string}/span>
-    </div>
-    <div class="content">
-        <h2 class="title">${cancion.title}</h2>
-        <div class="meta">${formatter.format(cancion.channel_follower_count)}</div>
-        <div class="footer">
-            <span class="channel">Canal: <a href="${cancion.channel_url}"
-                    target="_blank" rel="noopener noreferrer">${cancion.channel}</a></span>
-        </div>
-    </div>
-</article>`
-            container.innerHTML += mostrarCancion; 
-        })
-
-        
-
-    } catch (error) {
-        alert(`No se pudo cargar las categorias ${error.message}`);
-
-    }
-}
 
 (() => {
     renderSongs(); 
